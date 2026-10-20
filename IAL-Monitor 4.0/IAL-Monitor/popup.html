@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><link rel="stylesheet" href="app.css">
+<style>
+  body { width: 340px; background: #fff; }
+  .top { padding: 14px 16px; }
+  h1 { font-size: 20px; }
+  .body { padding: 14px 16px 16px; }
+  .body p { margin: 0 0 10px; }
+  ul { margin: 0 0 12px; padding-left: 18px; }
+  li { margin-bottom: 4px; }
+  .row { display: flex; gap: 8px; }
+  .row button { flex: 1; }
+</style></head>
+<body>
+  <header class="top"><h1><span class="mark">IAL</span> monitor</h1></header>
+  <div class="body">
+    <p id="status">Loading…</p>
+    <ul id="list"></ul>
+    <div class="row">
+      <button id="check">Check SC now</button>
+      <button class="primary" id="open">Open workspace</button>
+    </div>
+  </div>
+  <script src="lib/sc.js"></script>
+  <script src="popup.js"></script>
+</body></html>

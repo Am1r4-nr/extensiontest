@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IAL Monitor</title>
+  <link rel="icon" href="icons/icon32.png">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <h1><span class="mark">Investor Alert List</span> monitor</h1>
+      <p class="status" id="status">Loading…</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="step" id="step-check">
+      <div class="step-head">
+        <span class="num">1</span>
+        <div>
+          <h2>Check the SC website</h2>
+          <p class="hint">Looks for “Investor Alert List (as at …)” announcements published after your cut-off date.</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="primary" id="btn-check">Check SC now</button>
+        <button id="btn-scan-tab" title="Use this if you can see an update on the SC media page that the check did not pick up">Read links from open SC page</button>
+        <a class="link" href="https://www.sc.com.my/resources/media" target="_blank" rel="noopener">Open SC media page</a>
+      </div>
+      <details class="settings">
+        <summary>Settings</summary>
+        <div class="grid">
+          <label>Only show updates after
+            <input type="date" id="set-baseline">
+            <small>Set this to the “as at” date of your last Excel (e.g. 22/09/2026).</small>
+          </label>
+          <label>Your name (for the check log)
+            <input type="text" id="set-by" placeholder="e.g. Firdaus">
+          </label>
+          <label class="inline"><input type="checkbox" id="set-auto"> Check automatically while Chrome is open</label>
+          <label>Every
+            <select id="set-interval">
+              <option value="1">1 hour</option><option value="2">2 hours</option><option value="3">3 hours</option>
+              <option value="6">6 hours</option><option value="12">12 hours</option><option value="24">24 hours</option>
+            </select>
+          </label>
+        </div>
+        <button id="btn-save-settings">Save settings</button>
+      </details>
+    </section>
+
+    <section class="step" id="step-review">
+      <div class="step-head">
+        <span class="num">2</span>
+        <div>
+          <h2>Review new entities</h2>
+          <p class="hint">Website, reasons and address are copied automatically from the SC Investor Alert List page. You only need to type something if a row is marked red.</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="btn-grab">Fill details automatically</button>
+        <span class="hint" id="grab-note"></span>
+      </div>
+      <div id="updates"></div>
+    </section>
+
+    <section class="step" id="step-export">
+      <div class="step-head">
+        <span class="num">3</span>
+        <div>
+          <h2>Export to Excel</h2>
+          <p class="hint" id="master-line">No master file yet. Choose it once below and it will be remembered.</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="primary big" id="btn-export-master" disabled>Download updated master Excel</button>
+        <button id="btn-export-new" disabled>Download new rows only</button>
+        <label class="file-inline">
+          <input type="file" id="master-file" accept=".xlsx">
+          <span id="master-pick">Choose master file</span>
+        </label>
+      </div>
+      <label class="inline mark-done"><input type="checkbox" id="mark-done" checked> After downloading, mark these updates as done</label>
+      <p class="hint" id="export-note"></p>
+      <p class="result" id="export-result" role="status"></p>
+    </section>
+
+    <section class="log">
+      <h2>Check log</h2>
+      <table id="history"><thead><tr><th>When</th><th>By</th><th>What</th><th>Details</th></tr></thead><tbody></tbody></table>
+    </section>
+  </main>
+
+  <script src="lib/exceljs.min.js"></script>
+  <script src="lib/sc.js"></script>
+  <script src="lib/excel.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

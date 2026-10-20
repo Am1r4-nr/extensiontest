@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Malaysia PEP Register</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <h1>Malaysia PEP register</h1>
+      <p id="summary" class="muted">No refresh yet. Refresh to build the register from the enabled sources.</p>
+      <p id="stale" class="stale" role="status" hidden></p>
+      <p id="bg" class="bg" role="status" hidden><span id="bgText"></span> <button id="bgStop" type="button" class="row-btn">Stop background refresh</button></p>
+    </div>
+    <button id="refreshBtn" class="primary" type="button">Refresh all sources</button>
+  </header>
+
+  <section id="progress" class="progress" hidden>
+    <div class="progress-head">
+      <strong id="progressText">Starting…</strong>
+      <span id="progressCount" class="muted"></span>
+    </div>
+    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span id="barFill"></span></div>
+    <ol id="ledger" class="ledger"></ol>
+  </section>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-tab="db" aria-selected="true">Register</button>
+    <button role="tab" data-tab="upload" aria-selected="false">Upload documents</button>
+    <button role="tab" data-tab="assoc" aria-selected="false">Family &amp; associates</button>
+    <button role="tab" data-tab="sources" aria-selected="false">Sources</button>
+    <button role="tab" data-tab="log" aria-selected="false">Refresh log</button>
+  </nav>
+
+  <main>
+    <section id="tab-db" class="tab">
+      <div class="filters">
+        <input id="q" type="search" placeholder="Search a name, e.g. Anwar Ibrahim" autocomplete="off" aria-label="Search name">
+        <select id="fCategory" aria-label="BNM category"><option value="">All BNM categories</option></select>
+        <select id="fStatus" aria-label="Status">
+          <option value="pep">Current and former PEPs</option>
+          <option value="active">Currently listed</option>
+          <option value="not_seen">Former (no longer listed)</option>
+          <option value="new">New in last refresh</option>
+          <option value="changed">Position changed</option>
+          <option value="excluded">Excluded</option>
+          <option value="">All records</option>
+        </select>
+        <select id="fTier" aria-label="Role type">
+          <option value="">All roles</option>
+          <option value="1">Clear PEP roles</option>
+          <option value="2">Senior roles to review</option>
+        </select>
+        <button id="exportBtn" type="button">Export CSV</button>
+      </div>
+      <p id="count" class="muted"></p>
+      <div class="table-wrap">
+        <table id="people">
+          <thead><tr>
+            <th>Name</th><th>Position or relationship</th><th>Organisation</th><th>BNM category</th><th>Status</th><th>First seen</th><th>Last seen</th><th></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p id="empty" class="empty" hidden></p>
+    </section>
+
+    <section id="tab-upload" class="tab" hidden>
+      <p class="note">Upload documents you trust: an org chart, a gazette or annual report PDF, a picture or screenshot, a Word file, or your own Excel / CSV list. The extension reads them here in Chrome (nothing is uploaded anywhere) and shows what it found. Correct names and positions, untick anything wrong, then save. People saved from uploads are never marked as "no longer listed" by a website refresh.</p>
+      <div class="upload-box">
+        <label class="drop" id="drop">
+          <input type="file" id="upFile" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.bmp,.svg,.xlsx,.xls,.xlsm,.csv,.ods,.docx,.html,.htm,.txt">
+          <strong>Drop files here, or click to choose</strong>
+          <span class="muted">PDF, pictures, Excel / CSV, Word (.docx), saved web pages, text</span>
+        </label>
+        <label class="up-target">Save the people under
+          <select id="upSource"></select>
+        </label>
+      </div>
+      <p id="upMsg" class="muted" role="status"></p>
+      <div id="upPreview" hidden>
+        <div class="up-actions">
+          <button id="upAll" type="button">Select all</button>
+          <button id="upNone" type="button">Select none</button>
+          <span id="upCount" class="muted"></span>
+          <button id="upSave" class="primary" type="button">Save selected to register</button>
+          <button id="upDiscard" type="button">Discard</button>
+        </div>
+        <div class="table-wrap">
+          <table id="upTable">
+            <thead><tr><th>Save</th><th>Name</th><th>Titles</th><th>Position</th><th>Organisation (optional)</th><th>From</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <p class="note">Spreadsheet tip: columns headed <strong>Nama / Name</strong>, <strong>Jawatan / Position</strong>, <strong>Organisasi / Organisation</strong> and optionally <strong>Gelaran / Titles</strong> are read directly, row by row. <button id="upTemplate" type="button" class="row-btn">Download spreadsheet template</button></p>
+
+      <form id="manualForm" class="add-source">
+        <h2>Add one person by hand</h2>
+        <input name="name" required placeholder="Full name, e.g. Ahmad bin Hamid">
+        <input name="titles" placeholder="Titles, e.g. YB Dato'">
+        <input name="position" required placeholder="Position, e.g. Timbalan Menteri Kewangan">
+        <input name="organisation" placeholder="Organisation (optional)">
+        <button type="submit">Add to register</button>
+      </form>
+      <p id="manualMsg" class="muted" role="status"></p>
+    </section>
+
+    <section id="tab-assoc" class="tab" hidden>
+      <p class="note">Family members (parents, spouses, children, siblings, in-laws) and close associates are not published on the source sites, so they are recorded here from your own due diligence. They appear in the register, the popup name check and the CSV export alongside the PEP they are linked to.</p>
+      <form id="assocForm" class="add-source">
+        <h2>Add a family member or close associate</h2>
+        <input name="name" required placeholder="Full name as per NRIC or passport">
+        <select name="relationship" required aria-label="Relationship"></select>
+        <input name="pep" required list="pepList" placeholder="Linked PEP: start typing a name" aria-label="Linked PEP">
+        <datalist id="pepList"></datalist>
+        <input name="evidence" placeholder="Evidence: source URL or document reference">
+        <input name="notes" placeholder="Notes (optional)">
+        <button type="submit">Add to register</button>
+      </form>
+      <p id="assocMsg" class="muted" role="status"></p>
+      <div class="add-source">
+        <h2>Import from CSV</h2>
+        <p class="note">Columns: name, relationship, pep_name, evidence, notes. Relationship must be one of the options above. Rows link to the PEP whose name matches exactly; rows that don't match are kept and marked "PEP not found".</p>
+        <input id="assocFile" type="file" accept=".csv,text/csv" aria-label="CSV file">
+        <button id="assocTemplate" type="button">Download CSV template</button>
+      </div>
+      <div class="table-wrap">
+        <table id="assocTable">
+          <thead><tr><th>Name</th><th>Relationship</th><th>Linked PEP</th><th>Evidence</th><th>Added</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="tab-sources" class="tab" hidden>
+      <div class="auto">
+        <h2>Automatic refresh</h2>
+        <label>Refresh the register
+          <select id="autoRefresh">
+            <option value="daily">Every day</option>
+            <option value="weekly">Every week</option>
+            <option value="fortnightly">Every two weeks</option>
+            <option value="off">Off (manual only)</option>
+          </select>
+        </label>
+        <p id="autoNext" class="muted"></p>
+        <label><input type="checkbox" id="useMedia"> Read org charts published as PDFs or pictures (text recognition runs inside Chrome; nothing is uploaded)</label>
+        <label><input type="checkbox" id="useChrome"> When a site refuses a direct request or only loads in a browser, open it in a minimized Chrome window and read it there</label>
+        <p class="note">Runs in the background while Chrome is open and shows a notification with what changed. If Chrome was closed when a refresh was due, it runs the next time Chrome starts. The toolbar icon shows a red ! when the register is out of date.</p>
+      </div>
+<p class="note">Each source has <strong>Link 1</strong> (its main website) and any number of extra links: the exact pages that list the leaders (Pengurusan Tertinggi, Lembaga Pengarah, EXCO…) or org chart PDFs and pictures. <strong>Read this source now</strong> reads all of a source's links in one click: the extra links first, then the main website if fewer than 3 people were found. Each link shows what it gave last time.</p>
+      <div class="table-wrap">
+        <table id="sources">
+          <thead><tr><th>On</th><th>Source and its links</th><th>Last result</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <form id="addSource" class="add-source">
+        <h2>Add a source</h2>
+        <input name="name" required placeholder="Name, e.g. Dewan Bandaraya Kuala Lumpur">
+        <select name="category"></select>
+        <input name="url" required type="url" placeholder="https://www.dbkl.gov.my/">
+        <button type="submit">Add source</button>
+      </form>
+    </section>
+
+    <section id="tab-log" class="tab" hidden>
+      <ol id="runs" class="runs"></ol>
+    </section>
+  </main>
+
+  <script type="module" src="dashboard.js"></script>
+</body>
+</html>

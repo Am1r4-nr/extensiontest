@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "UNSC Sanctions Watch",
+  "version": "1.1.0",
+  "description": "Checks the UNSC Consolidated List 'last updated' date and Security Council press releases, alerts on changes, and saves timestamped evidence screenshots automatically.",
+  "permissions": [
+    "alarms",
+    "storage",
+    "notifications",
+    "downloads",
+    "activeTab",
+    "scripting",
+    "idle"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "UNSC Sanctions Watch",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

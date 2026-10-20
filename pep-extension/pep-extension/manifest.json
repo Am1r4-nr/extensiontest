@@ -1,0 +1,61 @@
+{
+  "manifest_version": 3,
+  "name": "Malaysia PEP Register",
+  "short_name": "PEP Register",
+  "version": "1.7.0",
+  "description": "One-click refresh of domestic Politically Exposed Persons under BNM's AML/CFT definition, with family members and close associates.",
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "contextMenus",
+    "alarms",
+    "offscreen",
+    "notifications",
+    "scripting",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "*://*.gov.my/*",
+    "*://*.ssm.com.my/*",
+    "*://*.sc.com.my/*",
+    "*://*.khazanah.com.my/*",
+    "*://*.pnb.com.my/*",
+    "*://*.ltat.org.my/*",
+    "*://*.petronas.com/*",
+    "*://*.bursamalaysia.com/*",
+    "*://*.mil.my/*",
+    "*://*.umno-online.my/*",
+    "*://*.keadilanrakyat.org/*",
+    "*://*.dapmalaysia.org/*",
+    "*://*.pas.org.my/*",
+    "*://*.amanah.org.my/*",
+    "*://*.mybersatu.org/*",
+    "*://*.mca.org.my/*",
+    "*://*.mic.org.my/*",
+    "*://*.gerakan.org.my/*"
+  ],
+  "optional_host_permissions": [
+    "*://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "PEP Register",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  }
+}

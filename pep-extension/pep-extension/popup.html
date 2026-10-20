@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="dashboard.css">
+  <style>
+    body { width: 360px; padding: 16px; }
+    h1 { font-size: 17px; }
+    #q { width: 100%; margin: 12px 0 8px; }
+    #capture { width: 100%; margin-top: 10px; }
+    #capBox { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+    #capBox select, #capBox button { width: 100%; margin-top: 6px; }
+    #capList { list-style: none; margin: 6px 0; padding: 0; max-height: 160px; overflow: auto; font-size: 12px; }
+    #capList li { padding: 3px 0; border-bottom: 1px dashed var(--line); }
+    #results { list-style: none; margin: 0 0 12px; padding: 0; max-height: 260px; overflow: auto; }
+    #results li { padding: 6px 0; border-bottom: 1px solid var(--line); }
+    #results .sub { color: var(--muted); font-size: 12px; }
+    .actions { display: flex; gap: 8px; }
+    .actions button { flex: 1; }
+    .hit { color: var(--bad); font-weight: 600; }
+    .clear { color: var(--ok); }
+  </style>
+</head>
+<body>
+  <h1>PEP register</h1>
+  <p id="meta" class="muted">Loading…</p>
+  <p id="stale" class="stale" hidden></p>
+  <input id="q" type="search" placeholder="Check a name" autocomplete="off" aria-label="Check a name">
+  <ul id="results"></ul>
+  <div class="actions">
+    <button id="refresh" class="primary" type="button">Refresh now</button>
+    <button id="open" type="button">Open register</button>
+  </div>
+  <button id="capture" type="button">Add people from this page</button>
+  <div id="capBox" hidden>
+    <p id="capMsg" class="muted"></p>
+    <ul id="capList"></ul>
+    <div id="capSave" hidden>
+      <select id="capSource" aria-label="Save under source"></select>
+      <select id="capCategory" aria-label="Category for new source" hidden></select>
+      <button id="capConfirm" class="primary" type="button">Save to register</button>
+    </div>
+  </div>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

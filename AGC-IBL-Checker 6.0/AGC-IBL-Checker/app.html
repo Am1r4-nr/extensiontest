@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AGC Third-Party Notice Checker</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <h1>AGC third-party notices</h1>
+      <p class="sub"><span id="version"></span> · Act 613 · Notis Kepada Pihak Ketiga → IBL &amp; AGC Consolidated List</p>
+    </div>
+    <a class="source" href="https://lom.agc.gov.my/subsid.php?type=pub" target="_blank" rel="noopener">Open AGC listing</a>
+  </header>
+
+  <main>
+    <section class="masters" aria-label="Master workbooks">
+      <div class="master" id="master-ibl" data-kind="ibl">
+        <div class="m-head">
+          <span class="m-title">IBL workbook</span>
+          <span class="m-state" id="ibl-state">Not loaded</span>
+        </div>
+        <p class="m-meta" id="ibl-meta">Drop your latest IBL_DD_MM_YYYY.xlsx here, or choose it.</p>
+        <div class="m-actions"><label class="file-btn">Choose file<input type="file" accept=".xlsx" id="ibl-file" hidden></label>
+          <span class="m-folder"><span id="ibl-folder-state"></span> <button id="ibl-folder-btn" class="linkbtn" type="button">Link folder</button></span></div>
+      </div>
+      <div class="master" id="master-agc" data-kind="agc">
+        <div class="m-head">
+          <span class="m-title">AGC Consolidated List</span>
+          <span class="m-state" id="agc-state">Not loaded</span>
+        </div>
+        <p class="m-meta" id="agc-meta">Drop AGC_Consolidated_List.xlsx here, or choose it.</p>
+        <div class="m-actions"><label class="file-btn">Choose file<input type="file" accept=".xlsx" id="agc-file" hidden></label>
+          <span class="m-folder"><span id="agc-folder-state"></span> <button id="agc-folder-btn" class="linkbtn" type="button">Link folder</button></span></div>
+      </div>
+    </section>
+
+    <section class="run">
+      <button id="check-btn" class="check">
+        <span class="check-label">Check AGC for new notices</span>
+        <span class="check-sub" id="check-sub">Runs by itself each time you click the extension icon</span>
+      </button>
+      <div class="run-opts">
+        <label>Extract notices dated from
+          <input type="date" id="since-date">
+        </label>
+        <label class="auto"><input type="checkbox" id="auto-update"> Update the workbooks automatically after each check</label>
+        <label class="manual">Add a notice PDF manually
+          <input type="file" accept="application/pdf" id="manual-pdf" hidden>
+          <span class="linkish">Choose PDF</span>
+        </label>
+      </div>
+      <div id="progress" class="progress" role="status" aria-live="polite"></div>
+    </section>
+
+    <section id="results" class="results" aria-label="Notices found"></section>
+
+    <section id="email" class="email" hidden>
+      <h2>Email to branches</h2>
+      <p class="e-help">One email per publication date, with every name from that date's notices and the PDF. Nothing is ever sent automatically.</p>
+      <div class="e-mode">
+        <label><input type="radio" name="em-mode" value="copy"> Gmail opens in another Chrome profile (Work) — copy &amp; paste</label>
+        <label><input type="radio" name="em-mode" value="gmail"> Gmail works in this Chrome — open the draft for me</label>
+      </div>
+      <div id="email-list"></div>
+      <label class="auto"><input type="checkbox" id="em-autoOpen"> Prepare the email automatically after the workbooks are updated</label>
+      <details class="e-settings">
+        <summary>Email settings</summary>
+        <div class="e-grid">
+          <label>To <input id="em-to" type="text" placeholder="farid@kaf.com.my, masaida@kaf.com.my, …"></label>
+          <label>Cc <input id="em-cc" type="text" placeholder="optional"></label>
+          <label>Gmail account <input id="em-account" type="text" placeholder="firdausfauzi@kaf.com.my (if you use more than one)"></label>
+          <label>Subject <input id="em-subject" type="text"></label>
+          <label>Greeting <input id="em-greeting" type="text"></label>
+          <label>Opening paragraph <textarea id="em-intro" rows="4"></textarea></label>
+          <label>Closing <textarea id="em-closing" rows="3"></textarea></label>
+          <label>Signature <textarea id="em-signature" rows="5"></textarea><span class="hint">Leave empty if Gmail already adds your signature.</span></label>
+        </div>
+        <p class="hint">{date_long} becomes “25 September 2026”. Changes save automatically. <button id="em-reset" class="linkbtn" type="button">Restore the default wording</button></p>
+      </details>
+    </section>
+  </main>
+
+  <footer id="actionbar" class="actionbar" hidden>
+    <div class="ab-summary" id="ab-summary"></div>
+    <div class="ab-actions">
+      <button id="copy-btn" class="ghost">Copy names</button>
+      <button id="generate-btn" class="primary">Update both workbooks</button>
+    </div>
+  </footer>
+
+  <template id="notice-tpl">
+    <article class="notice">
+      <header class="n-head">
+        <div class="n-id">
+          <span class="n-date"></span>
+          <span class="n-pu"></span>
+        </div>
+        <span class="n-status"></span>
+        <div class="n-actions">
+          <a class="n-pdf" target="_blank" rel="noopener">PDF</a>
+          <button class="n-extract ghost">Extract</button>
+        </div>
+      </header>
+      <div class="n-body"></div>
+    </article>
+  </template>
+
+  <script src="lib/jszip.min.js"></script>
+  <script src="lib/pdf.min.js"></script>
+  <script src="parser.js"></script>
+  <script src="pdftext.js"></script>
+  <script src="xlsx-append.js"></script>
+  <script src="email.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

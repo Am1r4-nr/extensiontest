@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>UNSC Sanctions Watch</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <div>
+      <h1>UNSC Sanctions Watch</h1>
+      <p id="checked" class="muted">Not checked yet</p>
+    </div>
+    <button id="refresh" class="ghost" title="Check now">Check now</button>
+  </header>
+
+  <section id="plate" class="plate">
+    <p class="plate-label">Consolidated List last updated</p>
+    <p id="listDate" class="plate-date">–</p>
+    <p id="counts" class="counts"></p>
+    <p id="listStatus" class="status"></p>
+    <button id="ackList" class="primary" hidden>Mark as reviewed</button>
+  </section>
+
+  <section class="press">
+    <div class="row">
+      <h2>Security Council press releases</h2>
+      <button id="ackPress" class="link" hidden>Mark as reviewed</button>
+    </div>
+    <p id="pressStatus" class="muted small"></p>
+    <ul id="pressList"></ul>
+  </section>
+
+  <section class="actions">
+    <button id="capture" class="secondary">Save evidence screenshot now</button>
+    <p id="captureHint" class="muted small"></p>
+    <div class="auto">
+      <label class="check"><input type="checkbox" id="autoShot"> Save a screenshot automatically every day at
+        <input type="time" id="shotTime" value="09:00"></label>
+      <label class="check"><input type="checkbox" id="shotOnChange"> Also save one as soon as a change is detected</label>
+      <p id="lastShot" class="muted small"></p>
+    </div>
+    <div class="btn-row">
+      <button id="openList" class="ghost">Open list page</button>
+      <button id="openPress" class="ghost">Open press releases</button>
+      <button id="export" class="ghost">Export log (CSV)</button>
+    </div>
+  </section>
+
+  <footer>
+    <label for="interval">Check automatically every</label>
+    <select id="interval">
+      <option value="15">15 minutes</option>
+      <option value="30">30 minutes</option>
+      <option value="60">1 hour</option>
+      <option value="180">3 hours</option>
+    </select>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>
